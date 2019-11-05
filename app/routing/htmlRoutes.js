@@ -1,20 +1,16 @@
-// Displays all matches
-app.get("/survey", function(req, res) {
-    return res.json(matches);
+var path = require("path");
+
+module.exports = function (app) {
+
+  // Displays all matches
+  app.get("/survey", function (req, res) {
+    res.sendFile(path.join(__dirname, "/../public/survey.html"));
   });
-  
+
   // Displays a single character, or shows "No character found"
-  app.get("/api/characters/:character", function(req, res) {
-    var chosen = req.params.matches;
-  
-    console.log(chosen);
-  
-    for (var i = 0; i < matches.length; i++) {
-      if (chosen === matches[i].routeName) {
-        return res.json(matches[i]);
-      }
-    }
-  
-    return res.send("No matches found");
-  
+  // fallback use route for homepage
+  app.use(function (req, res) {
+    res.sendFile(path.join(__dirname, "/../public/home.html"));
+
   });
+};
