@@ -1,8 +1,9 @@
 // Dependencies
 // =============================================================
 var express = require("express");
+var bodyParser = require("body-parser");
 var path = require("path");
-var fs = require("fs");
+
 
 // Sets up the Express App
 // =============================================================
@@ -14,45 +15,31 @@ var PORT = process.env.PORT || 8080;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Create our server
-var server = http.createServer(handleRequest);
+// ROUTER
+// The below points our server to a series of "route" files.
+// These routes give our server a "map" of how to respond when users visit or request data from various URLs.
+require("../app/routing/apiRoutes")(app);
+require("../app/routing/htmlRoutes")(app);
 
-// Create a function for handling the requests and responses coming into our server
-function handleRequest(req, res) {
+app.use(express.static("app/public"));
 
-  // Here we use the fs package to read our index.html file
-  fs.readFile(__dirname + "/index.html", function(err, data) {
-    if (err) throw err;
-    // We then respond to the client with the HTML page by specifically telling the browser that we are delivering
-    // an html file.
-    res.writeHead(200, { "Content-Type": "text/html" });
-    res.end(data);
-  });
-}
+// // Create our server
+// var server = http.createServer(handleRequest);
 
-// Routes
-app.get("/", function(req, res) {
-    res.send("Welcome to the Star Wars Page!");
-  });
-  
-  
-  // Create New Characters - takes in JSON input
-  app.post("/api/characters", function(req, res) {
-    var newCharacter = req.body;
-  
-    console.log(newCharacter);
-  
-    characters.push(newCharacter);
-  
-    res.json(newCharacter);
-  });
-  
-  app.listen(PORT, function() {
-    console.log("App listening on PORT " + PORT);
-  });
+// // Create a function for handling the requests and responses coming into our server
+// function handleRequest(req, res) {
 
-  // Start our server so that it can begin listening to client requests.
+//   // Here we use the fs package to read our index.html file
+//   fs.readFile(__dirname + "/../public/home.html", function(err, data) {
+//     if (err) throw err;
+//     // We then respond to the client with the HTML page by specifically telling the browser that we are delivering
+//     // an html file.
+//     res.writeHead(200, { "Content-Type": "text/html" });
+//     res.end(data);
+//   });
+// }
+
+// Starts our server
 app.listen(PORT, function() {
-    // Log (server-side) when our server has started
-    console.log("Server listening on: http://localhost:" + PORT);
+    console.log("Server is listening on PORT: " + PORT);
   });
